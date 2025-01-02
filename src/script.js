@@ -8,7 +8,7 @@ import GUI from 'lil-gui'
  * Base
  */
 // Debug
-const gui = new GUI()
+// const gui = new GUI()
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -95,6 +95,10 @@ const doorRoughnessTexture = textureLoader.load('/door/roughness.webp')
 
 doorColorTexture.colorSpace = THREE.SRGBColorSpace
 
+// lightbulb
+const lightbulbARMTexture = textureLoader.load('/lightbulb/granite_tile_02_1k/granite_tile_02_arm_1k.webp')
+const lightbulbNormalTexture = textureLoader.load('/lightbulb/granite_tile_02_1k/granite_tile_02_nor_gl_1k.webp')
+
 /**
  * House
  */
@@ -117,8 +121,8 @@ const floor = new THREE.Mesh(
 floor.rotation.x = Math.PI * - 0.5
 scene.add(floor)
 
-gui.add(floor.material, 'displacementScale').min(0).max(1).step(0.001)
-gui.add(floor.material, 'displacementBias').min(-1).max(1).step(0.001)
+// gui.add(floor.material, 'displacementScale').min(0).max(1).step(0.001)
+// gui.add(floor.material, 'displacementBias').min(-1).max(1).step(0.001)
 
 
 // house container
@@ -207,6 +211,22 @@ bush4.position.set(-1, 0.05, 2.6)
 house.add(bush1, bush2, bush3, bush4)
 bush4.rotation.x = -0.75
 
+// Light bulb
+const lightbulb = new THREE.Mesh(
+    new THREE.SphereGeometry(0.2, 16, 16),
+    new THREE.MeshStandardMaterial({
+        color: '#ff7d46',
+        aoMap: lightbulbARMTexture,
+        roughnessMap: lightbulbARMTexture,
+        metalnessMap: lightbulbARMTexture,
+        normalMap: lightbulbNormalTexture
+    })
+)
+lightbulb.position.y = 2.5
+lightbulb.position.z = 1.9
+lightbulb.rotation.y = -0.15
+lightbulb.rotation.x = 0.1
+house.add(lightbulb)
 
 // Graves (not part of the house)
 const graveGeometry = new THREE.BoxGeometry(0.6, 0.8, 0.2)
@@ -264,9 +284,12 @@ scene.add(directionalLight)
 
 // Door light
 const doorLight = new THREE.PointLight('#ff7d46', 5)
-doorLight.position.z = 2.2
-doorLight.position.y = 2.5
+doorLight.position.z = 2.25
+doorLight.position.y = 2.35
 house.add(doorLight)
+
+// const doorLightHelper = new THREE.PointLightHelper(doorLight, 0.5); // 0.5 is the size of the helper sphere
+// scene.add(doorLightHelper);
 
 // Ghosts lights
 const ghost1 = new THREE.PointLight('#8800ff', 6)
